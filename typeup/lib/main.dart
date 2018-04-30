@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:typeup/view/search.dart';
 import 'view/home.dart';
 import 'view/login.dart';
+import 'view/tab_page.dart';
 
 void main() => runApp(new MyApp());
 
@@ -10,12 +11,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      theme: new ThemeData(
+        primaryColor: Colors.black
+      ),
         title: 'Flutter Demo',
         routes: <String, WidgetBuilder>{
           "/LoginPage": (BuildContext context) => new LoginPage(),
-          "/HomePage": (BuildContext context) => new HomePage()
+          "/HomePage": (BuildContext context) => new HomePage(),
+          "/TapPage": (BuildContext context) => new TabPage(),
+          "/SearchPage": (BuildContext context) => new SearchPage(),
         },
-        home: new LoginPage());
+        home: new SearchPage());
   }
 }
 

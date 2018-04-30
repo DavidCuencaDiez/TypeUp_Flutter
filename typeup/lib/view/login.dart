@@ -35,7 +35,7 @@ class _LoginState extends State<LoginPage> {
       form.save();
       userAuth.verifyUser(user).then((onValue) {
         if (onValue == "Login Successfull")
-          Navigator.pushReplacementNamed(context, "/HomePage");
+          Navigator.pushReplacementNamed(context, "/TapPage");
         else
           showInSnackBar(onValue);
       }).catchError((PlatformException onError) {
