@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "192970890560",
+    "firebase_url": "https://typeupionic.firebaseio.com",
+    "project_id": "typeupionic",
+    "storage_bucket": "typeupionic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192970890560:android:0002cced324ab69b",
+        "android_client_info": {
+          "package_name": "com.example.typeup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192970890560-s4sppcph90bmlge78n1khtgevmu2qgfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvl5ECSpLmhBCcOephInXO0wBsh1QL1-A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192970890560:android:9d822706508c4547",
+        "android_client_info": {
+          "package_name": "com.typeup.typeup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192970890560-s4sppcph90bmlge78n1khtgevmu2qgfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvl5ECSpLmhBCcOephInXO0wBsh1QL1-A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

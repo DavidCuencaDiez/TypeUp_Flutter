@@ -1,0 +1,61 @@
+name: typeup
+description: A new Flutter project.
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  image_picker: ^0.4.1
+  google_sign_in: ^3.0.2
+  firebase_auth: ^0.5.5
+  firebase_database: ^0.4.6
+  firebase_storage: ^0.3.0
+  sqflite: '0.8.2'
+  path_provider: "^0.3.1"
+  redux: '^3.0.0'
+  flutter_redux: '^0.5.0'
+  rxdart: 0.16.0
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+
+  assets:
+    - assets/login-screen-background.png
+    - assets/logo.png
+    - assets/flogo.png
+    - assets/g-logo.png
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Medium.ttf
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.io/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.io/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+
+
+  # For details regarding fonts from package dependencies, 
+  # see https://flutter.io/custom-fonts/#from-packages
