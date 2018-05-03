@@ -1,9 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../data/book_data_provider.dart';
-import '../model/Book.dart';
+import 'package:typeup/data/book_data_provider.dart';
+import 'package:typeup/model/book.dart';
+import 'package:typeup/view/book_detail.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,8 +26,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     getAllBooks();
   }
-@override
 
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -37,13 +35,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    createTile(Book book) => new Hero(
+    createTile(Book book) => Hero(
           tag: book.title,
-          child: new Material(
+          child: Material(
             elevation: 15.0,
             shadowColor: Colors.yellow.shade900,
-            child: new InkWell(
-              child: new Image.network(
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => new BookPage(book),
+                  ),
+                );
+              },
+              child: Image.network(
                 book.cover,
                 fit: BoxFit.cover,
               ),

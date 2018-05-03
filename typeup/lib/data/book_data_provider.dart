@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/Book.dart';
+import 'package:typeup/model/book.dart';
 
 class BookData {
   Future<List<Book>> getAllBooks() async {

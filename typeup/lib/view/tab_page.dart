@@ -1,11 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:typeup/model/profile.dart';
 import 'package:typeup/view/home.dart';
-import 'package:typeup/view/search.dart';
+import 'package:typeup/data/book_data_provider.dart';
+import 'package:typeup/model/book.dart';
+import 'package:typeup/view/book_detail.dart';
+import 'package:material_search/material_search.dart';
+
+import 'package:typeup/data/profile_data_provider.dart';
 
 class TabPage extends StatefulWidget {
   @override
-  _TabPageState createState() => new _TabPageState();
+  _TabPageState createState() => _TabPageState();
 }
 
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
@@ -13,41 +19,114 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
   String _email;
   String _name;
+  List<Book> _books;
+  BookData bookDB = BookData();
+  List<Book> _booksFilter = List<Book>();
+  Book _book = null;
+  Profile profile;
+  ProfileData profileDB = ProfileData();
+  getAllBooks() {
+    bookDB.getAllBooks().then((bo) {
+      this.setState(() {
+        _books = bo;
+      });
+    });
+  }
+
+  _buildMaterialSearchPage(BuildContext context) {
+    return MaterialPageRoute<Book>(
+        settings: RouteSettings(
+          name: 'material_search',
+          isInitialRoute: false,
+        ),
+        builder: (BuildContext context) {
+          return Material(
+            child: MaterialSearch<Book>(
+              placeholder: 'Search',
+              results: _books
+                  .map(
+                    (Book v) => MaterialSearchResult<Book>(
+                          icon: Icons.library_books,
+                          value: v,
+                          text: v.title,
+                        ),
+                  )
+                  .toList(),
+              filter: (dynamic value, String criteria) {
+                return value.title
+                    .toLowerCase()
+                    .trim()
+                    .contains(RegExp(r'' + criteria.toLowerCase().trim() + ''));
+              },
+              onSelect: (dynamic value) => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BookPage(value))),
+            ),
+          );
+        });
+  }
+
+  _showMaterialSearch(BuildContext context) {
+    Navigator
+        .of(context)
+        .push(_buildMaterialSearchPage(context))
+        .then((dynamic value) {
+      setState(() => _book = value as Book);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = new TabController(vsync: this, length: 3);
-    firebaseAuth.currentUser().then((onValue)=> _email = onValue.email);
+    getAllBooks();
+    _tabController = TabController(vsync: this, length: 3);
+    firebaseAuth.currentUser().then((onValue) => this.setState(() {
+          _email = onValue.email;
+          profileDB.getProfile(onValue.uid).then(
+              (profileInfo) => this.setState(() => profile = profileInfo));
+        }));
   }
 
-@override
+  @override
   void dispose() {
     _tabController.dispose();
     // TODO: implement dispose
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('TypeUp'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('TypeUp'),
         backgroundColor: Colors.black,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              _showMaterialSearch(context);
+            },
+            tooltip: 'Search',
+            icon: Icon(Icons.search),
+          )
+        ],
       ),
-      drawer: new Drawer(
-        child: new ListView(
+      drawer: Drawer(
+        child: ListView(
           children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text('David Cuenca'),
-              accountEmail: new Text(_email),
-              currentAccountPicture: new CircleAvatar(
+            UserAccountsDrawerHeader(
+              accountName: Text(profile == null
+                  ? 'your name'
+                  : '${profile.name} ${profile.lastName}'),
+              accountEmail: Text(_email ?? 'unknows'),
+              currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
-                child: new Text('D'),
+                backgroundImage: profile != null ? NetworkImage(profile.profileImage) : null,
+                child: profile == null ?Text('?'): null
               ),
             ),
-            new ListTile(         
-              trailing: new Icon(Icons.add),     
-              title: new Text('Add new book'),
+            ListTile(
+              trailing: Icon(Icons.add),
+              title: Text('Add  book'),
               onTap: () {
                 // Update the state of the app
                 // ...
@@ -55,44 +134,38 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
                 Navigator.pop(context);
               },
             ),
-            new ListTile(
-              trailing: new Icon(Icons.exit_to_app),
-              title: new Text('Log Out'),
+            ListTile(
+              trailing: Icon(Icons.exit_to_app),
+              title: Text('Log Out'),
               onTap: () {
                 // Update the state of the app
                 // ...
                 // Then close the drawer
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/LoginPage');
               },
             ),
           ],
         ),
       ),
-      bottomNavigationBar: new Material(
+      bottomNavigationBar: Material(
         color: Colors.black,
-        child: new TabBar(
+        child: TabBar(
           controller: _tabController,
           tabs: <Widget>[
-            new Tab(
-              icon: new Icon(Icons.home),
+            Tab(
+              icon: Icon(Icons.home),
             ),
-            new Tab(
-              icon: new Icon(Icons.search),
-            ),
-            new Tab(
-              icon: new Icon(Icons.rss_feed),
+            Tab(
+              icon: Icon(Icons.rss_feed),
             ),
           ],
         ),
       ),
-      body: new TabBarView(
+      body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          new Tab(
-            child: new HomePage(),
-          ),
-          new Tab(
-            child: new SearchPage(),
+          Tab(
+            child: HomePage(),
           ),
         ],
       ),

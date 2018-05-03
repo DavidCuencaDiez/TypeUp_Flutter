@@ -6,16 +6,16 @@ import '../services/validations.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginState createState() => new _LoginState();
+  _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<LoginPage> {
-  final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  UserData user = new UserData();
-  UserAuth userAuth = new UserAuth();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  UserData user = UserData();
+  UserAuth userAuth = UserAuth();
   bool autovalidate = false;
-  Validations validations = new Validations();
+  Validations validations = Validations();
   bool _obscureText = true;
 
   onPressed(String routeName) {
@@ -23,8 +23,7 @@ class _LoginState extends State<LoginPage> {
   }
 
   void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
   }
 
   void _handleSubmitted() {
@@ -47,50 +46,49 @@ class _LoginState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    return new Scaffold(
+    return Scaffold(
       resizeToAvoidBottomPadding: true,
       key: _scaffoldKey,
-      body: new SingleChildScrollView(
-        child: new Container(
+      body: SingleChildScrollView(
+        child: Container(
           height: screenSize.height,
-          padding: new EdgeInsets.all(16.0),
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-                image:
-                    new ExactAssetImage('assets/login-screen-background.png'),
+          padding: EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: ExactAssetImage('assets/login-screen-background.png'),
                 fit: BoxFit.cover),
           ),
-          child: new SingleChildScrollView(
-            child: new Center(
-              child: new Form(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Form(
                 key: formKey,
-                child: new Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Padding(
-                      padding: new EdgeInsets.only(top: 200.0),
+                    Padding(
+                      padding: EdgeInsets.only(top: 200.0),
                     ),
-                    new TextFormField(
-                        decoration: new InputDecoration(
-                          prefixIcon: new Icon(Icons.mail_outline),
+                    TextFormField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.mail_outline),
                           hintText: 'Enter Email',
                         ),
                         validator: (email) => validations.validateEmail(email),
                         onSaved: (String email) {
                           user.email = email;
                         }),
-                    new TextFormField(
-                        decoration: new InputDecoration(
+                    TextFormField(
+                        decoration: InputDecoration(
                           fillColor: Colors.grey,
                           hintText: 'Enter password',
-                          prefixIcon: new Icon(Icons.lock_open),
-                          suffixIcon: new GestureDetector(
+                          prefixIcon: Icon(Icons.lock_open),
+                          suffixIcon: GestureDetector(
                             onTap: () {
                               setState(() {
                                 _obscureText = !_obscureText;
                               });
                             },
-                            child: new Icon(_obscureText
+                            child: Icon(_obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off),
                           ),
@@ -100,17 +98,17 @@ class _LoginState extends State<LoginPage> {
                         onSaved: (String password) {
                           user.password = password;
                         }),
-                    new Padding(
-                      padding: new EdgeInsets.only(top: 30.0),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30.0),
                     ),
-                    new RaisedButton(
+                    RaisedButton(
                       color: Colors.black,
-                      child: new Container(
+                      child: Container(
                         height: 50.0,
-                        child: new Center(
-                          child: new Text(
+                        child: Center(
+                          child: Text(
                             "Login",
-                            style: new TextStyle(
+                            style: TextStyle(
                                 color: Colors.white, fontFamily: 'Roboto'),
                             textAlign: TextAlign.center,
                           ),
@@ -118,87 +116,85 @@ class _LoginState extends State<LoginPage> {
                       ),
                       onPressed: _handleSubmitted,
                     ),
-                    new Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        new FlatButton(
-                          child: new Text(
+                        FlatButton(
+                          child: Text(
                             "Create Account",
-                            style: new TextStyle(
+                            style: TextStyle(
                                 color: Colors.black, fontFamily: 'Roboto'),
                           ),
                           onPressed: () => onPressed("/LoginPage"),
                         ),
-                        new FlatButton(
-                          child: new Text(
+                        FlatButton(
+                          child: Text(
                             "Forgot password?",
-                            style: new TextStyle(
+                            style: TextStyle(
                                 color: Colors.black, fontFamily: 'Roboto'),
                           ),
                           onPressed: () => onPressed("/LoginPage"),
                         ),
                       ],
                     ),
-                    new Padding(
-                      padding: new EdgeInsets.all(10.0),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
                     ),
-                    new Text('OR'),
-                    new Padding(
-                      padding: new EdgeInsets.all(10.0),
+                    Text('OR'),
+                    Padding(
+                      padding: EdgeInsets.all(10.0),
                     ),
-                    new RaisedButton(
+                    RaisedButton(
                       elevation: 2.0,
                       color: Colors.white,
                       onPressed: () {},
-                      child: new Row(
+                      child: Row(
                         children: <Widget>[
-                          new Image.asset(
+                          Image.asset(
                             'assets/g-logo.png',
                             width: 18.0,
                           ),
-                          new Padding(
-                            padding:
-                                new EdgeInsets.only(right: 18.0, left: 6.0),
+                          Padding(
+                            padding: EdgeInsets.only(right: 18.0, left: 6.0),
                           ),
-                          new Text(
+                          Text(
                             'SIGN IN WITH GOOGLE',
-                            style: new TextStyle(
-                                color: new Color.fromRGBO(0, 0, 0, 54.0),
+                            style: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 54.0),
                                 fontFamily: 'Roboto',
                                 fontSize: 14.0),
                           ),
-                          new Padding(
-                            padding: new EdgeInsets.only(right: 6.0),
+                          Padding(
+                            padding: EdgeInsets.only(right: 6.0),
                           ),
                         ],
                       ),
                     ),
-                    new Padding(
-                      padding: new EdgeInsets.only(top: 10.0),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
                     ),
-                    new RaisedButton(
+                    RaisedButton(
                       elevation: 2.0,
                       color: Colors.white,
                       onPressed: () {},
-                      child: new Row(
+                      child: Row(
                         children: <Widget>[
-                          new Image.asset(
+                          Image.asset(
                             'assets/flogo.png',
                             width: 18.0,
                           ),
-                          new Padding(
-                            padding:
-                                new EdgeInsets.only(right: 18.0, left: 6.0),
+                          Padding(
+                            padding: EdgeInsets.only(right: 18.0, left: 6.0),
                           ),
-                          new Text(
+                          Text(
                             'SIGN IN WITH FACEBOOK',
-                            style: new TextStyle(
-                                color: new Color.fromRGBO(0, 0, 0, 54.0),
+                            style: TextStyle(
+                                color: Color.fromRGBO(0, 0, 0, 54.0),
                                 fontFamily: 'Roboto',
                                 fontSize: 14.0),
                           ),
-                          new Padding(
-                            padding: new EdgeInsets.only(right: 6.0),
+                          Padding(
+                            padding: EdgeInsets.only(right: 6.0),
                           ),
                         ],
                       ),
