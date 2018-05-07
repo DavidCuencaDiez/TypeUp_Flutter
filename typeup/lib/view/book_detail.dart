@@ -51,7 +51,7 @@ class _BookPageState extends State<BookPage> {
             ),
           ),
         ),
-        text('300 pages', color: Colors.white, size: 12)
+        text('300 pages', color: Colors.black, size: 12)
       ],
     );
 
@@ -61,17 +61,17 @@ class _BookPageState extends State<BookPage> {
       children: <Widget>[
         text(_book.title,
             size: 16,
-            color: Colors.white,
+            color: Colors.black,
             isBold: true,
             padding: EdgeInsets.only(top: 16.0)),
         text(
           'by David Cuenca',
-          color: Colors.white,
+          color: Colors.black,
           size: 12,
           padding: EdgeInsets.only(top: 8.0, bottom: 16.0),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 35.0),
+          padding: EdgeInsets.only(top: 15.0),
         ),
         Row(
           children: <Widget>[
@@ -81,9 +81,17 @@ class _BookPageState extends State<BookPage> {
             )
           ],
         ),
-        Padding(
-          padding: EdgeInsets.only(top: 30.0),
+        Padding(padding: EdgeInsets.only(top: 10.0),),
+        Row(
+          children: <Widget>[
+            Chip(label: Text('Comedi'),backgroundColor: Colors.redAccent,),
+            Padding(padding: EdgeInsets.only(right: 10.0),),
+            Chip(label: Text('Romance'),backgroundColor: Colors.redAccent,),
+          ],
         ),
+        Padding(
+          padding: EdgeInsets.only(top: 20.0),
+        ),        
         Material(
           borderRadius: BorderRadius.circular(20.0),
           shadowColor: Colors.blue.shade200,
@@ -91,7 +99,7 @@ class _BookPageState extends State<BookPage> {
           child: MaterialButton(
             onPressed: () {},
             minWidth: 160.0,
-            color: Colors.yellowAccent.shade200,
+            color: Colors.blueAccent.shade100,
             child: text('Read', color: Colors.black, size: 13),
           ),
         )

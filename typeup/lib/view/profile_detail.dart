@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:typeup/model/book.dart';
 import 'package:typeup/model/profile.dart';
-import 'package:typeup/view/book_detail.dart';
 import 'package:typeup/view/home.dart';
+import 'package:typeup/view/related.dart';
 
 class ProfilePage extends StatefulWidget {
   final String id;
@@ -17,17 +18,19 @@ class _ProfilePageState extends State<ProfilePage> {
   Profile _info;
   List<Book> _books = List<Book>();
   _ProfilePageState(this.id);
-
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser user;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    firebaseAuth.currentUser().then((fireUser) => this.setState(() {
+          user = fireUser;
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
-    booksCollection() => {};
-    final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -41,25 +44,30 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.all(20.0),
                   height: 250.0,
                   decoration: BoxDecoration(
-                    color: Colors.yellowAccent,
+                    color: Colors.yellowAccent.shade400,
                   ),
                   child: Column(
                     children: <Widget>[
-                      Material(
-                        color: Colors.transparent,
-                        type: MaterialType.circle,
-                        elevation: 12.0,
-                        child: Container(
-                          height: 100.0,
-                          child: Image.network(
-                              'https://i.ytimg.com/vi/w5zJpVR8TMk/maxresdefault.jpg'),
+                      Hero(
+                        tag: 'User',
+                        child: Material(
+                          color: Colors.transparent,
+                          type: MaterialType.circle,
+                          elevation: 12.0,
+                          child: Container(
+                            height: 100.0,
+                            child: Image.network(
+                              user != null ? user.photoUrl : '',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 14.0),
                       ),
-                      Text('David Cuenca',
-                          style: Theme.of(context).textTheme.caption),
+                      Text(user != null ? user.displayName : '',
+                          style: Theme.of(context).textTheme.title),
                       Padding(
                         padding: EdgeInsets.only(top: 14.0),
                       ),
@@ -95,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Container(
-                height: 300.0,
+                height: 310.0,
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
@@ -112,7 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Tab(
                           child: Text(
-                            'Relats',
+                            'Stories',
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -121,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     body: TabBarView(
                       children: [
                         HomePage(),
-                        Icon(Icons.directions_transit),
+                        RelatedPage(),
                       ],
                     ),
                   ),

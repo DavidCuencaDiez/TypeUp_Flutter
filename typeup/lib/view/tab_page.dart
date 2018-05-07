@@ -6,7 +6,8 @@ import 'package:typeup/data/book_data_provider.dart';
 import 'package:typeup/model/book.dart';
 import 'package:typeup/view/book_detail.dart';
 import 'package:material_search/material_search.dart';
-
+import 'package:typeup/view/profile_detail.dart';
+import 'package:typeup/view/related.dart';
 import 'package:typeup/data/profile_data_provider.dart';
 
 class TabPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class TabPage extends StatefulWidget {
 
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  FirebaseUser user;
   TabController _tabController;
   String _email;
   String _name;
@@ -23,8 +25,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   BookData bookDB = BookData();
   List<Book> _booksFilter = List<Book>();
   Book _book = null;
-  Profile profile;
-  ProfileData profileDB = ProfileData();
+
   getAllBooks() {
     bookDB.getAllBooks().then((bo) {
       this.setState(() {
@@ -58,8 +59,11 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
                     .trim()
                     .contains(RegExp(r'' + criteria.toLowerCase().trim() + ''));
               },
-              onSelect: (dynamic value) => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BookPage(value))),
+              onSelect: (dynamic value) {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BookPage(value)));
+              },
             ),
           );
         });
@@ -80,10 +84,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
     super.initState();
     getAllBooks();
     _tabController = TabController(vsync: this, length: 3);
-    firebaseAuth.currentUser().then((onValue) => this.setState(() {
-          _email = onValue.email;
-          profileDB.getProfile(onValue.uid).then(
-              (profileInfo) => this.setState(() => profile = profileInfo));
+    firebaseAuth.currentUser().then((fireUser) => this.setState(() {
+          user = fireUser;
         }));
   }
 
@@ -99,7 +101,6 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text('TypeUp'),
-        backgroundColor: Colors.black,
         actions: <Widget>[
           IconButton(
             onPressed: () {
@@ -114,25 +115,31 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(profile == null
-                  ? 'your name'
-                  : '${profile.name} ${profile.lastName}'),
-              accountEmail: Text(_email ?? 'unknows'),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: profile != null ? NetworkImage(profile.profileImage) : null,
-                child: profile == null ?Text('?'): null
+              accountName: Text(user != null ?user.displayName :'Unknow'),
+              accountEmail: Text(user != null ?user.email :'Unknow'),
+              currentAccountPicture: Hero(
+                child: Material(
+                  elevation: 12.0,
+                  type: MaterialType.circle,
+                  color: Colors.black,
+                  child: Container(
+                    child: InkWell(
+                        onTap: () {
+                          Navigator
+                              .push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        new ProfilePage(),
+                                  ))
+                              .then((value) =>
+                                  Navigator.of(context).pop(context));
+                        },
+                        child: Image.network(user != null ?user.photoUrl :'')),
+                  ),
+                ),
+                tag: 'User',
               ),
-            ),
-            ListTile(
-              trailing: Icon(Icons.add),
-              title: Text('Add  book'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
             ),
             ListTile(
               trailing: Icon(Icons.exit_to_app),
@@ -148,7 +155,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         ),
       ),
       bottomNavigationBar: Material(
-        color: Colors.black,
+        color: Colors.yellowAccent.shade400,
         child: TabBar(
           controller: _tabController,
           tabs: <Widget>[
@@ -166,6 +173,9 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         children: <Widget>[
           Tab(
             child: HomePage(),
+          ),
+          Tab(
+            child: RelatedPage(),
           ),
         ],
       ),

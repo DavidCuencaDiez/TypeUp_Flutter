@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:typeup/data/book_data_provider.dart';
 import 'package:typeup/model/book.dart';
 import 'package:typeup/view/book_detail.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -49,9 +50,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-              child: Image.network(
-                book.cover,
-                fit: BoxFit.cover,
+              child: new FadeInImage.memoryNetwork(
+                image: book.cover,
+                fit: BoxFit.cover, 
+                placeholder: kTransparentImage,
               ),
             ),
           ),

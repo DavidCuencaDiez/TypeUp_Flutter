@@ -39,4 +39,6 @@ class UserAuth {
 
     return firebaseUser;
   }
+
+
 }
