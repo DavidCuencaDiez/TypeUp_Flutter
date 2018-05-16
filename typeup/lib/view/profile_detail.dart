@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:typeup/model/book.dart';
-import 'package:typeup/model/profile.dart';
 import 'package:typeup/view/home.dart';
 import 'package:typeup/view/related.dart';
 
@@ -15,8 +13,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final String id;
-  Profile _info;
-  List<Book> _books = List<Book>();
   _ProfilePageState(this.id);
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseUser user;

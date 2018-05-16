@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(primaryColor: Colors.yellowAccent.shade400),
+        theme: ThemeData(primaryColor: Color.fromRGBO(52, 73, 85, 1.0)),
         title: 'Flutter Demo',
         routes: <String, WidgetBuilder>{
           "/LoginPage": (BuildContext context) => LoginPage(),
@@ -19,6 +19,6 @@ class MyApp extends StatelessWidget {
           "/TapPage": (BuildContext context) => TabPage(),
           "/RelatedWritePage": (BuildContext context) => RelatedWritePage(),
         },
-        home: LoginPage());
+        home: TabPage());
   }
 }

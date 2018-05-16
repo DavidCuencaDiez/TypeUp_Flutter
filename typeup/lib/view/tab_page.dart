@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:typeup/model/profile.dart';
 import 'package:typeup/view/home.dart';
 import 'package:typeup/data/book_data_provider.dart';
 import 'package:typeup/model/book.dart';
@@ -8,7 +7,6 @@ import 'package:typeup/view/book_detail.dart';
 import 'package:material_search/material_search.dart';
 import 'package:typeup/view/profile_detail.dart';
 import 'package:typeup/view/related.dart';
-import 'package:typeup/data/profile_data_provider.dart';
 
 class TabPage extends StatefulWidget {
   @override
@@ -19,13 +17,12 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseUser user;
   TabController _tabController;
-  String _email;
-  String _name;
   List<Book> _books;
   BookData bookDB = BookData();
-  List<Book> _booksFilter = List<Book>();
-  Book _book = null;
-
+  Book _book;
+  bool sheetOpen = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  PersistentBottomSheetController _sheetController;
   getAllBooks() {
     bookDB.getAllBooks().then((bo) {
       this.setState(() {
@@ -83,7 +80,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     getAllBooks();
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(vsync: this, length: 2);
     firebaseAuth.currentUser().then((fireUser) => this.setState(() {
           user = fireUser;
         }));
@@ -99,6 +96,7 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('TypeUp'),
         actions: <Widget>[
@@ -115,8 +113,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(user != null ?user.displayName :'Unknow'),
-              accountEmail: Text(user != null ?user.email :'Unknow'),
+              accountName: Text(user != null ? user.displayName : 'Unknow'),
+              accountEmail: Text(user != null ? user.email : 'Unknow'),
               currentAccountPicture: Hero(
                 child: Material(
                   elevation: 12.0,
@@ -135,7 +133,8 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
                               .then((value) =>
                                   Navigator.of(context).pop(context));
                         },
-                        child: Image.network(user != null ?user.photoUrl :'')),
+                        child:
+                            Image.network(user != null ? user.photoUrl : '')),
                   ),
                 ),
                 tag: 'User',
@@ -154,18 +153,45 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-      bottomNavigationBar: Material(
-        color: Colors.yellowAccent.shade400,
-        child: TabBar(
-          controller: _tabController,
-          tabs: <Widget>[
-            Tab(
-              icon: Icon(Icons.home),
-            ),
-            Tab(
-              icon: Icon(Icons.rss_feed),
-            ),
-          ],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color.fromRGBO(249, 170, 51, 1.0),
+        isExtended: true,
+        onPressed: () {
+          if (!sheetOpen) {
+            _sheetController =_scaffoldKey.currentState
+                .showBottomSheet((builder) => BottonSheet());
+          } else {
+            _sheetController.close();
+          }
+          sheetOpen = !sheetOpen;
+
+          /*
+          showModalBottomSheet(
+              builder: (BuildContext context) {
+                return BottonSheet();
+              },
+              context: context);
+              */
+        },
+        child: Icon(Icons.send),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        hasNotch: true,
+        elevation: 5.0,
+        child: Material(
+          color: Color.fromRGBO(52, 73, 85, 1.0),
+          child: TabBar(
+            controller: _tabController,
+            tabs: <Widget>[
+              Tab(
+                icon: Icon(Icons.home),
+              ),
+              Tab(
+                icon: Icon(Icons.rss_feed),
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
@@ -179,6 +205,21 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BottonSheet extends StatefulWidget {
+  @override
+  _BottonSheetState createState() => new _BottonSheetState();
+}
+
+class _BottonSheetState extends State<BottonSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      height: 400.0,
+      decoration: BoxDecoration(color: Colors.greenAccent),
     );
   }
 }

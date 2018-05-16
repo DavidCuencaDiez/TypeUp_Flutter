@@ -20,7 +20,6 @@ class _RelatedWritePageState extends State<RelatedWritePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final googleSignIn = GoogleSignIn();
   final TextEditingController _textController = TextEditingController();
-  bool _isComposing = false;
   String _imageUrl;
   String _message;
   String _title;
@@ -53,9 +52,6 @@ class _RelatedWritePageState extends State<RelatedWritePage> {
 
   Future<Null> _handleSubmitted() async {
     _textController.clear();
-    setState(() {
-      _isComposing = false;
-    });
     await _ensureLoggedIn();
     if (_title == null) {
       _title = '';
@@ -82,6 +78,7 @@ class _RelatedWritePageState extends State<RelatedWritePage> {
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButton: FloatingActionButton(
+        isExtended: true,
         heroTag: 'SendRelate',
         onPressed: () {
           _handleSubmitted();

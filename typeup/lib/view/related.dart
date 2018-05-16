@@ -1,16 +1,10 @@
-import 'dart:async';
-import 'dart:io';
-import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:typeup/view/related_message.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 class RelatedPage extends StatefulWidget {
   @override
@@ -22,45 +16,8 @@ class _RelatedPageState extends State<RelatedPage> {
   final auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final googleSignIn = GoogleSignIn();
-  final TextEditingController _textController = TextEditingController();
-  bool _isComposing = false;
 //final analytics =  FirebaseAnalytics();
 
-  void _sendMessage({String text, String imageUrl}) {
-    reference.push().set({
-      'text': text,
-      'imageUrl': imageUrl,
-      'senderName': googleSignIn.currentUser.displayName,
-      'senderPhotoUrl': googleSignIn.currentUser.photoUrl,
-    }).catchError((error) =>
-        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error))));
-    //analytics.logEvent(name: 'send_message');
-  }
-
-  Future<Null> _ensureLoggedIn() async {
-    GoogleSignInAccount user = googleSignIn.currentUser;
-    if (user == null) user = await googleSignIn.signInSilently();
-    if (user == null) {
-      user = await googleSignIn.signIn();
-    }
-    if (await auth.currentUser() == null) {
-      GoogleSignInAuthentication credentials =
-          await googleSignIn.currentUser.authentication;
-      await auth.signInWithGoogle(
-        idToken: credentials.idToken,
-        accessToken: credentials.accessToken,
-      );
-    }
-  }
-
-  Future<Null> _handleSubmitted(String text) async {
-    _textController.clear();
-    setState(() {
-      _isComposing = false;
-    });
-    await _ensureLoggedIn();
-    _sendMessage(text: text);
-  }
 
   @override
   void initState() {
@@ -70,8 +27,7 @@ class _RelatedPageState extends State<RelatedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.yellowAccent.shade100,
+    return Scaffold(      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed('/RelatedWritePage');
@@ -100,7 +56,7 @@ class _RelatedPageState extends State<RelatedPage> {
       ),
     );
   }
-
+/*
   Widget _buildTextComposer() {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).accentColor),
@@ -173,5 +129,5 @@ class _RelatedPageState extends State<RelatedPage> {
                   border: Border(top: BorderSide(color: Colors.grey[200])))
               : null),
     );
-  }
+  }*/
 }

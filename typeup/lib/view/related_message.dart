@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 @override
 class RelatedMessage extends StatelessWidget {
@@ -14,22 +15,27 @@ class RelatedMessage extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Image.network(
-              snapshot.value['imageUrl'],
+            CachedNetworkImage(
+              placeholder: new CircularProgressIndicator(),
+              imageUrl: snapshot.value['imageUrl'],
             ),
             Text(snapshot.value['text'])
           ],
         );
       } else {
-        return Image.network(
-          snapshot.value['imageUrl'],
-          width: 250.0,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CachedNetworkImage(
+              placeholder: new CircularProgressIndicator(),
+              imageUrl: snapshot.value['imageUrl'],
+            ),
+          ],
         );
       }
     } else {
       return Text(snapshot.value['text']);
     }
-
   }
 
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class RelatedMessage extends StatelessWidget {
       sizeFactor: CurvedAnimation(parent: animation, curve: Curves.easeOut),
       axisAlignment: 0.0,
       child: Card(
-        child: Container(          
+        child: Container(
           padding: EdgeInsets.all(10.0),
           child: Column(
             children: <Widget>[
@@ -52,7 +58,9 @@ class RelatedMessage extends StatelessWidget {
                       backgroundImage:
                           NetworkImage(snapshot.value['senderPhotoUrl']),
                     ),
-                    Padding(padding: EdgeInsets.only(right: 10.0),),
+                    Padding(
+                      padding: EdgeInsets.only(right: 10.0),
+                    ),
                     Column(
                       children: <Widget>[
                         Text(snapshot.value['senderName'],
