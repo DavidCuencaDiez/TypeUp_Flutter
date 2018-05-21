@@ -7,6 +7,14 @@ import 'package:typeup/view/book_detail.dart';
 import 'package:material_search/material_search.dart';
 import 'package:typeup/view/profile_detail.dart';
 import 'package:typeup/view/related.dart';
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class TabPage extends StatefulWidget {
   @override
@@ -14,6 +22,14 @@ class TabPage extends StatefulWidget {
 }
 
 class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
+  final reference = FirebaseDatabase.instance.reference().child('relateds');
+
+  final googleSignIn = GoogleSignIn();
+  final TextEditingController _textController = TextEditingController();
+  String _imageUrl;
+  String _message;
+  String _title;
+
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseUser user;
   TabController _tabController;
@@ -73,6 +89,153 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
         .then((dynamic value) {
       setState(() => _book = value as Book);
     });
+  }
+
+  void _sendMessage({String text, String imageUrl, String title}) {
+    reference.push().set({
+      'title': title,
+      'text': text,
+      'imageUrl': imageUrl,
+      'senderName': googleSignIn.currentUser.displayName,
+      'senderPhotoUrl': googleSignIn.currentUser.photoUrl,
+    });
+  }
+
+  Future<Null> _ensureLoggedIn() async {
+    GoogleSignInAccount user = googleSignIn.currentUser;
+    if (user == null) user = await googleSignIn.signInSilently();
+    if (user == null) {
+      user = await googleSignIn.signIn();
+    }
+    if (await firebaseAuth.currentUser() == null) {
+      GoogleSignInAuthentication credentials =
+          await googleSignIn.currentUser.authentication;
+      await firebaseAuth.signInWithGoogle(
+        idToken: credentials.idToken,
+        accessToken: credentials.accessToken,
+      );
+    }
+  }
+
+  Future<bool> _handleSubmitted() async {
+    _textController.clear();
+    await _ensureLoggedIn();
+    if (_title == null) {
+      _title = '';
+    }
+    if (_imageUrl != null) {
+      if (_message != null && _message.length > 0) {
+        _sendMessage(text: _message, imageUrl: _imageUrl, title: _title);
+      } else {
+        _sendMessage(imageUrl: _imageUrl, title: _title);
+      }
+      return true;
+    } else if (_message != null && _message.length > 0) {
+      _sendMessage(text: _message, title: _title);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> _neverSatisfied() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          title: new Text('Remember'),
+          content: new SingleChildScrollView(
+            child: new ListBody(
+              children: <Widget>[
+                new Text('Write a Story or add image.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return true;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _buildStoryWriter() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          TextField(
+            onChanged: (val) => _title = val,
+            decoration: InputDecoration(
+              labelText: 'Title',
+              labelStyle: TextStyle(color: Colors.black, fontSize: 20.0),
+              hintText: 'Title...',
+            ),
+            maxLength: 30,
+          ),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Story',
+              labelStyle: TextStyle(color: Colors.black, fontSize: 30.0),
+              hintText: 'Write some Story...',
+            ),
+            onChanged: (val) => _message = val,
+            keyboardType: TextInputType.multiline,
+            maxLines: 10,
+            maxLength: 400,
+          ),
+          FadeInImage.memoryNetwork(
+            placeholder: kTransparentImage,
+            image: _imageUrl ?? '',
+          ),
+          Row(children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: IconButton(
+                      icon: Icon(Icons.photo_camera),
+                      onPressed: () async {
+                        await _ensureLoggedIn();
+                        File imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.camera);
+                        int random = Random().nextInt(100000);
+                        StorageReference ref = FirebaseStorage.instance
+                            .ref()
+                            .child("image_$random.jpg");
+                        StorageUploadTask uploadTask = ref.putFile(imageFile);
+                        Uri downloadUrl = (await uploadTask.future).downloadUrl;
+                        this.setState(() => _imageUrl = downloadUrl.toString());
+                      }),
+                ),
+                Container(
+                  child: IconButton(
+                      icon: Icon(Icons.photo_album),
+                      onPressed: () async {
+                        await _ensureLoggedIn();
+                        File imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+                        int random = Random().nextInt(100000);
+                        StorageReference ref = FirebaseStorage.instance
+                            .ref()
+                            .child("image_$random.jpg");
+                        StorageUploadTask uploadTask = ref.putFile(imageFile);
+                        Uri downloadUrl = (await uploadTask.future).downloadUrl;
+                        this.setState(() => _imageUrl = downloadUrl.toString());
+                      }),
+                ),
+              ],
+            ),
+          ])
+        ],
+      ),
+    );
   }
 
   @override
@@ -157,22 +320,28 @@ class _TabPageState extends State<TabPage> with SingleTickerProviderStateMixin {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromRGBO(249, 170, 51, 1.0),
         isExtended: true,
-        onPressed: () {
-          if (!sheetOpen) {
-            _sheetController =_scaffoldKey.currentState
-                .showBottomSheet((builder) => BottonSheet());
+        onPressed: () async {
+          if (_sheetController == null) {
+            setState(() {
+              _tabController.index = 1;
+            });
+            _sheetController = _scaffoldKey.currentState
+                .showBottomSheet((builder) => _buildStoryWriter());
+            _sheetController.closed.then((onValue) {
+              _sheetController = null;
+              _imageUrl = null;
+              _message = null;
+              _title = null;
+            });
           } else {
-            _sheetController.close();
+            bool correct = await _handleSubmitted();
+            if (correct) {
+              _sheetController.close();
+              _sheetController = null;
+            } else {
+              await _neverSatisfied();
+            }
           }
-          sheetOpen = !sheetOpen;
-
-          /*
-          showModalBottomSheet(
-              builder: (BuildContext context) {
-                return BottonSheet();
-              },
-              context: context);
-              */
         },
         child: Icon(Icons.send),
       ),

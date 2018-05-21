@@ -19,6 +19,6 @@ class MyApp extends StatelessWidget {
           "/TapPage": (BuildContext context) => TabPage(),
           "/RelatedWritePage": (BuildContext context) => RelatedWritePage(),
         },
-        home: TabPage());
+        home: LoginPage());
   }
 }

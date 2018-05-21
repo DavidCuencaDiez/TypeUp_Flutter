@@ -28,15 +28,6 @@ class _RelatedPageState extends State<RelatedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(      
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/RelatedWritePage');
-        },
-        child: Hero(
-          tag: 'SendRelate',
-          child: Icon(Icons.send),
-        ),
-      ),
       key: _scaffoldKey,
       body: Column(
         children: <Widget>[

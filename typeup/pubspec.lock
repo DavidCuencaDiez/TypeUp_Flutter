@@ -37,7 +37,7 @@ packages:
     source: hosted
     version: "1.0.3"
   cached_network_image:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: cached_network_image
       url: "https://pub.dartlang.org"
@@ -93,12 +93,12 @@ packages:
     source: hosted
     version: "0.1.2"
   firebase_auth:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.9"
+    version: "0.5.10"
   firebase_core:
     dependency: transitive
     description:
@@ -107,19 +107,19 @@ packages:
     source: hosted
     version: "0.2.3"
   firebase_database:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: firebase_database
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.6"
   firebase_storage:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -132,13 +132,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1"
-  flutter_redux:
-    dependency: "direct main"
-    description:
-      name: flutter_redux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -159,7 +152,7 @@ packages:
     source: hosted
     version: "1.1.5"
   google_sign_in:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: google_sign_in
       url: "https://pub.dartlang.org"
@@ -194,7 +187,7 @@ packages:
     source: hosted
     version: "3.1.1"
   image_picker:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: image_picker
       url: "https://pub.dartlang.org"
@@ -243,12 +236,12 @@ packages:
     source: hosted
     version: "0.12.1+4"
   material_search:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: material_search
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.6"
   meta:
     dependency: transitive
     description:
@@ -306,7 +299,7 @@ packages:
     source: hosted
     version: "1.5.1"
   path_provider:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -340,13 +333,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.29.0+1"
-  redux:
-    dependency: transitive
-    description:
-      name: redux
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
   shared_preferences:
     dependency: transitive
     description:
@@ -408,13 +394,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.0"
-  sqflite:
-    dependency: "direct main"
-    description:
-      name: sqflite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.9"
   stack_trace:
     dependency: transitive
     description:
@@ -458,7 +437,7 @@ packages:
     source: hosted
     version: "0.12.34"
   transparent_image:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: transparent_image
       url: "https://pub.dartlang.org"
@@ -514,5 +493,5 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=2.0.0-dev.35 <=2.0.0-edge.3c4dccbd46f152be9e1b6ca95c57357e8e48057c"
+  dart: ">=2.0.0-dev.28.0 <=2.0.0-edge.3c4dccbd46f152be9e1b6ca95c57357e8e48057c"
   flutter: ">=0.1.4 <2.0.0"
