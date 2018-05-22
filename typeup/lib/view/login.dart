@@ -22,10 +22,9 @@ class _LoginState extends State<LoginPage> {
   }
 
   void _loginGoogle() async {
-    await _ensureLoggedIn()
-        .then(
-            (googleUser){Navigator.pushReplacementNamed(context, "/TapPage");} )
-        .catchError((error) => showInSnackBar(error.message));
+    await _ensureLoggedIn().then((googleUser) {
+      Navigator.pushReplacementNamed(context, "/TapPage");
+    }).catchError((error) => showInSnackBar(error.message));
   }
 
   Future<Null> _ensureLoggedIn() async {
@@ -67,9 +66,9 @@ class _LoginState extends State<LoginPage> {
               children: <Widget>[
                 Material(
                   elevation: 12.0,
-                  child: FlutterLogo(
-                    style: FlutterLogoStyle.horizontal,
-                    size: 320.0,
+                  child: new Image.asset(
+                    'assets/logo.png',
+                    height: 150.0,
                   ),
                 ),
                 Padding(
@@ -78,7 +77,7 @@ class _LoginState extends State<LoginPage> {
                 RaisedButton(
                   elevation: 12.0,
                   color: Colors.white,
-                  onPressed : () {
+                  onPressed: () {
                     _loginGoogle();
                   },
                   child: Row(
